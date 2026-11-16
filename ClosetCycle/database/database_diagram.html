@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClosetCycle Database Diagram</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        margin: 0;
+        padding: 32px;
+        background: #f6f2eb;
+        color: #191817;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    h1 {
+        margin: 0 0 8px;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-weight: 400;
+    }
+    .intro { margin: 0 0 28px; color: #5f5953; }
+    .diagram {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(260px, 1fr));
+        gap: 24px;
+        align-items: start;
+    }
+    .table-box {
+        background: #fff;
+        border: 1px solid #bdb5aa;
+    }
+    .table-box h2 {
+        margin: 0;
+        padding: 14px 16px;
+        background: #191817;
+        color: #fff;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: 1.25rem;
+        font-weight: 400;
+    }
+    .table-box ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .table-box li {
+        padding: 8px 14px;
+        border-top: 1px solid #e1dbd3;
+        font-size: 0.9rem;
+    }
+    .pk { font-weight: 700; }
+    .fk { color: #6b3040; }
+    .relationships {
+        margin-top: 32px;
+        padding: 22px;
+        background: #e7dfd4;
+    }
+    .relationships h2 {
+        margin-top: 0;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-weight: 400;
+    }
+    .relationships li { margin: 7px 0; }
+    .legend { margin-top: 22px; font-size: 0.85rem; color: #615a53; }
+    @media (max-width: 900px) {
+        .diagram { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+
+<h1>ClosetCycle Database Diagram</h1>
+<p class="intro">COMP 3541 Final Project — relational structure used by the PHP/MySQL application.</p>
+
+<div class="diagram">
+
+    <section class="table-box">
+        <h2>users</h2>
+        <ul>
+            <li class="pk">PK userID INT</li>
+            <li>firstName VARCHAR(50)</li>
+            <li>lastName VARCHAR(50)</li>
+            <li>email VARCHAR(100) UNIQUE</li>
+            <li>passwordHash VARCHAR(255)</li>
+            <li>role ENUM(member, admin)</li>
+            <li>dateCreated DATETIME</li>
+            <li>isActive TINYINT(1)</li>
+        </ul>
+    </section>
+
+    <section class="table-box">
+        <h2>categories</h2>
+        <ul>
+            <li class="pk">PK categoryID INT</li>
+            <li>categoryName VARCHAR(60) UNIQUE</li>
+        </ul>
+    </section>
+
+    <section class="table-box">
+        <h2>occasions</h2>
+        <ul>
+            <li class="pk">PK occasionID INT</li>
+            <li>occasionName VARCHAR(60) UNIQUE</li>
+        </ul>
+    </section>
+
+    <section class="table-box">
+        <h2>items</h2>
+        <ul>
+            <li class="pk">PK itemID INT</li>
+            <li class="fk">FK ownerID → users.userID</li>
+            <li class="fk">FK categoryID → categories.categoryID</li>
+            <li class="fk">FK occasionID → occasions.occasionID</li>
+            <li>itemName VARCHAR(100)</li>
+            <li>brand VARCHAR(80)</li>
+            <li>size VARCHAR(20)</li>
+            <li>colour VARCHAR(50)</li>
+            <li>itemCondition ENUM</li>
+            <li>description TEXT</li>
+            <li>imageName VARCHAR(255)</li>
+            <li>status ENUM</li>
+            <li>dateAdded DATETIME</li>
+        </ul>
+    </section>
+
+    <section class="table-box">
+        <h2>borrow_requests</h2>
+        <ul>
+            <li class="pk">PK requestID INT</li>
+            <li class="fk">FK itemID → items.itemID</li>
+            <li class="fk">FK borrowerID → users.userID</li>
+            <li>neededFrom DATE</li>
+            <li>neededUntil DATE</li>
+            <li>message VARCHAR(500)</li>
+            <li>status ENUM</li>
+            <li>requestDate DATETIME</li>
+        </ul>
+    </section>
+
+</div>
+
+<section class="relationships">
+    <h2>Relationships</h2>
+    <ul>
+        <li>One user can own many items.</li>
+        <li>One category can be used by many items.</li>
+        <li>One occasion can be used by many items.</li>
+        <li>One item can receive many borrowing requests.</li>
+        <li>One user can create many borrowing requests as a borrower.</li>
+        <li>Deleting an item cascades to its related borrowing request records.</li>
+    </ul>
+</section>
+
+<p class="legend"><strong>PK</strong> = Primary Key &nbsp;&nbsp; <strong>FK</strong> = Foreign Key</p>
+
+</body>
+</html>

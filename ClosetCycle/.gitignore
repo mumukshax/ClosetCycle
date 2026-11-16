@@ -1,0 +1,6 @@
+# Large files and local-only files
+*.mp4
+*.zip
+.DS_Store
+Thumbs.db
+.vscode/
